@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>REGISTER</title>
+
+<link rel="stylesheet" type="text/css" href="register.css">
+</head>
+<body>
+<script type="text/javascript" src="../src/form2js.js"></script>
+<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+var SendData;
+	function test()
+	{
+		 var formData = form2js('userRegistration', '.', true,function(node){
+					if (node.id && node.id.match(/callbackTest/))
+					{
+						return { name: node.id, value: node.innerHTML };
+					}
+				}); 
+		
+		 //alert(formData.UserDto.firstName);
+		 if(formData.UserDto.password == formData.UserDto.password1){
+			
+			 $.ajax({
+					type : "POST",
+					url : "/registerNewUser",
+					data :  JSON.stringify(formData.UserDto),
+					//dataType : "json",
+					contentType : 'application/json',					
+					success:function(data){
+						//alert(JSON.stringify(data));
+						//$("body").html(data);	
+						window.location.href = "/";
+					}
+				}); 
+		 }else{
+			// alert("in");
+			 $(".passwordMatch").css({"display":"block"});
+		 } 
+		 
+	}
+</script>
+<br>
+<div class="register">
+<h3 style="padding:0px; margin:0px;">REGISTRATION</h3><hr>
+
+<form id="userRegistration"  action="javascript:test()">
+
+<input style="margin-bottom:10px;"   type="text"  class="form" placeholder="FirstName" name="UserDto.firstName" required=""><br>
+
+<input  style="margin-bottom:10px;"   type="text"  class="form" placeholder=" create a UserName" name="UserDto.username" required >
+
+<input style="margin-bottom:10px;"   type="password"  class="form" placeholder="type in your password" name="UserDto.password" required=""><h5 class="passwordMatch" style="color:RED; font-size:15px;margin:0px;">password do not match</h5>
+<input style="margin-bottom:10px;"  type="password"  class="form" placeholder="confirm password" name="UserDto.password1" required=""><h5 class="passwordMatch" style="color:RED; font-size:15px;margin:0px;">password do not match</h5>
+<input style="margin-bottom:15px; "  type="submit" class="button" >
+</form>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(".passwordMatch").css({"display":"none"});
+});
+</script>
+
+</body>
+</html>

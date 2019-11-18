@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<style>
+.data {
+	background-color: white;
+}
+
+#addData {
+	border: 2px solid black;
+	display: inline-block;
+}
+</style>
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+<!--Get your own code at fontawesome.com-->
+</head>
+
+<meta charset="UTF-8">
+<title>Adding Data</title>
+</head>
+<body>
+	<script type="text/javascript" src="../src/form2js.js"></script>
+	<script type="text/javascript">
+var SendData;
+	function test()
+	{
+		var formData = form2js('testForm', '.', true,
+				function(node)
+				{
+					if (node.id && node.id.match(/callbackTest/))
+					{
+						return { name: node.id, value: node.innerHTML };
+					}
+				});
+		 SendData = JSON.stringify(formData);
+		 $.ajax({
+				type : "POST",
+				url : "/saveQuestionAnswers",
+				data : SendData,
+				dataType : "json",
+				contentType : 'application/json',					
+				success:function(data){
+						alert(JSON.stringify(data));
+						location.reload();
+				}
+			});
+	}
+
+		
+		
+		
+		/* $(document).on("click",function(){
+			$.ajax({
+				type : "POST",
+				url : "/user",
+				data : datas,
+				dataType : "json",
+				contentType : 'application/json'					
+			});	 */
+		
+	
+</script>
+	<h2>
+		<a href="/admin">Content Management</a>
+	</h2>
+	<div id="parent" align="center">
+		<form id="testForm" action="javascript:test()">
+			<label>Question:</label><br>
+			<textarea rows="3" cols="50" name="question" autofocus></textarea>
+			<br> <label>Answer Type:</label> <br> <br> <input
+				type="radio" name="radio" value="radio" checked="checked" class="radiobtn"> <label>radio</label>
+			<input type="radio" name="radio" value="checkbox" class="radiobtn"> <label>checkbox</label>
+			<input type="radio" name="radio" id="multiple" value="multiple">
+			<label>Multiple</label>
+			<div class="data"></div>
+			<div id="answer"></div>
+			<input type="button" name="add" value="Add answer" id="add"><br>
+			<br> <input type="submit" value="Submit" class=submit>
+		</form>
+	</div>
+
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+							var counter = 0;
+							$("#add")
+									.click(
+											function() {
+												var textArea = '<textarea rows="2" cols="40" name="answers[]" class="answers" autofocus></textarea><br>';
+												$("#answer").append(textArea);
+												//alert("clicked"); 
+											});
+
+							$("#multiple")
+									.click(
+											function() {
+												counter++;
+												if (counter == 1) {
+													var table = '<table border="1" id="addData"><tr class="header"><td><input type="button" value="Add Answers" id="addanswers" style="width:100%; background-color:green"></tr><tr><td><input type="button" id="addquestions" value="Add Questions" style="width:100%; background-color:blue;"></tr></table>';
+													$(".data").append(table);
+													$("#add").css({
+														'display' : 'none'
+													});
+												} else {
+												}
+											});
+
+							/* $(".submit").click(function() {
+								val = $('form').serialize();
+								$.post('/saveQuestionAnswers', // url
+								val, // data to be submit
+								function(data, status, jqXHR) {// success callback
+									//alert(data);
+								})
+								// alert($("form").serialize());
+							}); */
+
+						});
+
+		$(document)
+				.on(
+						"click",
+						function() {
+
+							$("#addanswers")
+									.click(
+											function() {
+
+												//alert("trying to add <td>");
+												var tableData = '<td><input type="text" name="answers[]"><button type="button" class="remove"><i class="far fa-trash-alt"></i></button></td>';
+												$(".header").append(tableData);
+
+												$(document).off('click');
+											});
+
+							$("#addquestions")
+									.click(
+											function() {
+												var tableRow = '<tr><td><input type="text" id="questions" name="questions[]"><button type="button" class="remove"><i class="far fa-trash-alt"></i></button></td>'
+
+												$("#addData").append(tableRow);
+												$(document).off('click');
+											});
+
+							$(".remove").click(function() {
+
+								$(this).parent().remove();
+								$(document).off('click');
+							});
+							
+							$(".radiobtn").click(function() {
+								$(".data").css({
+									'display' : 'none'
+								});
+
+								$("#add").css({
+
+									'display' : 'block'
+								});
+
+								$("#multiple").click(function() {
+
+									$(".data").css({
+										
+										'display' : 'block'
+									});
+									$(document).off('click');
+									
+								})
+
+								$(document).off('click');
+							});
+
+						});
+	</script>
+
+
+</body>
+
+
+</html>

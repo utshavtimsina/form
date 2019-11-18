@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript">
+function chart(question,answer,id,j){
+	delete z;
+	var z=[];
+	var ye;
+	console.log("var"+answer.length+"len"+j);
+	
+		for(i=0;i<answer.length;i++){
+			
+			z[i]=JSON.parse('{"y": 2,"indexLabel":"'+answer[i]+'" }');
+			//console.log(x);
+		}
+		ye=JSON.parse(JSON.stringify(z));
+		//alert(y);
+		//console.log(ye);
+	var chart = new CanvasJS.Chart(""+id,
+	{
+		title:{
+			text: question
+		},
+		legend: {
+			maxWidth: 350,
+			itemWidth: 120
+		},
+		data: [
+		{
+			type: "pie",
+			showInLegend: true,
+			legendText: "{indexLabel}",
+			dataPoints: ye
+		}
+		]
+	});
+	chart.render();
+	
+}
+</script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</head>
+<body>
+<div id="chartContainers" style="height: 300px; width: 100%;"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		var answers=[];
+		var subans=[];
+	
+		$.get(	"/getAll",function(data) {
+			 for (j = 0; j < data.length; j++) {
+				 delete subans;
+				 var subans=[];
+				 if(data[j].aType == "multiple"){
+					 for(k = 0; k < data[j].subQuestion.length ; k++ ){
+						 for (i = 0; i < data[j].subQuestion[k].answer.length; i++) {
+							 subans.push(data[j].subQuestion[k].answer[i].aDescription);
+						}
+						
+					 }
+					 x ="<div id="+data[j].qId+" style='height: 300px; width: 100%;'></div>"
+					 $("body").append(x);
+					 chart(data[j].qDescription,subans,data[j].qId,j);
+					 
+					 
+				 }else{
+					 for (i = 0; i < data[j].answer.length; i++) {
+						 subans.push(data[j].answer[i].aDescription);
+					}
+					 x ="<div id="+data[j].qId+" style='height: 300px; width: 100%;'></div>"
+					 $("body").append(x);
+					 chart(data[j].qDescription,subans,data[j].qId,j);
+				 }
+				 
+			
+			 }
+		 });	
+	
+		 
+		
+		
+		
+		
+		
+		
+		
+	});
+	</script>
+</body>
+</html>

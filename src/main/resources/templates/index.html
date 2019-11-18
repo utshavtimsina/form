@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+	position: relative;
+	background-image: url(login.jpg); //
+	background-repeat: repeat-y; //
+	background-repeat: repeat-y;
+}
+
+table {
+	position: relative;
+}
+
+#div {
+	margin: auto;
+	background-color: #C0C0C0;
+	height: 50%;
+	width: 40%;
+}
+
+hr {
+	background-color: black;
+}
+
+td {
+	vertical-align: top;
+}
+
+input[type="radio"] {
+	vertical-align: bottom;
+	width: 17px;
+	height: 17px;
+}
+</style>
+<meta charset="UTF-8">
+<title>adminPage</title>
+</head>
+<body>
+	<h1 align=center>MEMBER SATISFACTION SURVEY Results</h1>
+	<div id="div">
+	<table>
+	<tr>
+	<th><h4>Report Submitted by User ID:</h4></th>
+		
+	<th><select class="target">
+			
+			
+		</select></th><th>OR</th><th><a href="#" class="overall"> view Overall report</a></th></tr>
+		<br>
+	</table>
+	
+		<form action="/survey" method="post">
+
+			<table class="table">
+
+
+			</table>
+			<!--  
+			<input type="submit" class="submit" value="Submit">
+			-->
+		</form>
+	</div>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+							var firstUser;
+							$.get("/getAllUsers",function(data){
+								
+								for( k = 0; k < data.length ;k++ ){
+									if(k == 0){
+										firstUser = data[k].uId;
+										drawer(firstUser);
+
+									}
+									Uid = data[k].uId;
+									
+									$.get("/getUserById/"+data[k].uId,function(dataa){
+										//alert(dataa.id);
+										 x  = "<option value='"+dataa.id+"'>"+dataa.username+"</option>";
+										 $("select").append(x);
+									});
+									
+								}
+								
+							});
+							function drawer(firstUser){
+								 $
+									.get(
+											"/adminIndividualResults/"+firstUser,
+											function(data) {
+												//data = jQuery.parseJSON(data);
+												// $( "div" ).append( JSON.stringfy(data));
+												for (j = 0; j < data.length; j++) {
+													var x = '	<tr class="border">	<td>'
+															+ j + '.&nbsp<td>';
+													x += data[j].qDescription
+															+ '</tr>	';
+													for (i = 0; i < data[j].answer.length; i++) {
+
+														x += '<tr><td><td><input type="'+data[j].aType+'" class="check" name="'+data[j].qId+'" value="'+data[j].answer[i].aId+ '" checked="checked" disabled>'
+																+ data[j].answer[i].aDescription
+																+ '</tr>		<tr><td>			<td>';
+													}
+													x += '	<tr><td colspan="2"><hr></tr>';
+
+													$(".table").append(x);
+													//$("table").append(x);
+													//alert( );
+												}
+
+											});}
+							$( "select" ).change(function() {
+								
+								 var str = null;
+								 $( "select option:selected" ).each(function() {
+									 firstUser = $( this ).val();
+									
+								      $(".table").text("");
+								    });
+								drawer(firstUser);
+							
+							});
+							$(".overall").click(function(){
+							 $(".table").text("");
+							 $.get("/overall",function(data){
+									for (j = 0; j < data.length; j++) {
+										var x = '	<tr class="border">	<td>'
+												+ j + '.&nbsp<td>';
+										x += data[j].qDescription
+												+ '</tr>	';
+										for (i = 0; i < data[j].answer.length; i++) {
+
+											x += '<tr><td><td><input type="'+data[j].aType+'" class="check" name="'+data[j].qId+'" value="'+data[j].answer[i].aId+ '" checked="checked" disabled>'
+													+ data[j].answer[i].aDescription
+													+ '</tr>		<tr><td>			<td>';
+										}
+										x += '	<tr><td colspan="2"><hr></tr>';
+
+										$(".table").append(x);
+										//$("table").append(x);
+										//alert( );
+									}
+							 });
+							 
+							});
+							
+						
+							
+						});
+	</script>
+</body>
+</html>

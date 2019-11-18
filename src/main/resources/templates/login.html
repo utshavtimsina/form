@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="forum.css">
+<title>Login Form</title></head>
+<body>
+<br>
+<div class="LOGIN">
+<h5 id="heading">Provide Credentials</h5>
+<hr>
+<form method="post" action="/authenticate">
+<input style="margin-bottom:10px;" type="text"  class="form" placeholder="UserName" value="" name="username"  required=""><br>
+<h5 id="userMatch" style="color:RED; font-size:15px;margin:0px;">User does not exists!!</h5>
+<input style="margin-bottom:10px;" type="password"  class="form" placeholder="Password" name="password" required=""><br>
+<h5 id="passwordMatch" style="color:RED; font-size:15px;margin:0px;">Password do not match</h5>
+<label class="form"><input type="checkbox"  name="remember">Keep me logged in</label><br>
+<input type="submit" class="button" value="getIN" name="getIN">
+<p class="or">OR</p>
+</form>
+<form action="/register">
+<input style="margin-bottom:20px;" type="submit" class="button" value="newUSER">
+</form>
+</div>
+<script type="text/javascript">
+var url_string = window.location;
+var url = new URL(url_string);
+var error = url.searchParams.get("error");
+var user = url.searchParams.get("user");
+console.log(error);
+console.log(user);
+	if(user == "false"){
+		 document.getElementById("userMatch").style.display = "block";;
+			document.getElementById("passwordMatch").style.display = "none";
+		
+	}else if(error == "true"){
+		 document.getElementById("passwordMatch").style.display = "block";
+		 document.getElementById("userMatch").style.display = "none";
+	}
+	else{
+		document.getElementById("userMatch").style.display = "none";
+		 // x.style.color = "none";
+		document.getElementById("passwordMatch").style.display = "none";
+			
+			//y.style.display = "none";
+	}
+	
+	
+</script>
+</body>
+</html>
